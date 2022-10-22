@@ -13,10 +13,18 @@ const MovieDetails = () => {
   useEffect(() => {
     async function fetchSelectedMovie() {
       try {
-        const response = await fetchSelectedMovie(movieId);
-        if (response) {
-          setSelectedMovie(response.results);
-          console.log('setMovieList', selectedMovie);
+        const data = await fetchMoviesById(movieId);
+        if (data) {
+          setSelectedMovie({
+            poster: `https://image.tmdb.org/t/p/w500/${data.poster_path}`,
+            title: data.title,
+            score: Number.parseInt(data.vote_average * 10),
+            overview: data.overview,
+            genres: data.genres
+              .reduce((acc, genre) => (acc += genre.name + ' '), '')
+              .trim(),
+          });
+          console.log('setSelectedMovie', data);
         }
       } catch (error) {
         console.log(error);
@@ -28,10 +36,22 @@ const MovieDetails = () => {
   // console.log('location ', location);
   // console.log('location.state', location.state);
   // console.log('backLinkHref', backLinkHref);
+  const { poster, title, score, overview, genres } = selectedMovie;
   return (
     <>
       <div>MovieDetails</div>
       <Link to={backLinkHref}>Back </Link>
+      <div>
+        <img src={poster} alt={title} width="240" height="320" />
+      </div>
+      <div>
+        <h1>{title}</h1>
+        <p>User Score: {score}%</p>
+        <h2>Overview</h2>
+        <p>{overview}</p>
+        <h3>Genres</h3>
+        <p>{genres}</p>
+      </div>
       <p>Additional information </p>
       <NavWrapper>
         <li>
