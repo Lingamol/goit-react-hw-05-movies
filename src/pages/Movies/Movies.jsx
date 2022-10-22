@@ -1,5 +1,5 @@
 // import PropTypes from 'prop-types';
-import { useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { Formik, ErrorMessage } from 'formik';
 import { useState, useEffect, useMemo } from 'react';
 
@@ -19,14 +19,17 @@ const Movies = () => {
   const initialValues = {
     search: '',
   };
-  // const [query, setQuery] = useState('');
+
   const [searchParams, setSearchParams] = useSearchParams();
-  // setSearchParams({ query: '' });
+
   const params = useMemo(
     () => Object.fromEntries([...searchParams]),
     [searchParams]
   );
+  const { query: paramQuery } = params;
+  const [query, setQuery] = useState(paramQuery ? paramQuery : '');
   const [movieList, setMovieList] = useState([]);
+  const location = useLocation();
   // useEffect(
   //   () => async () => {
   //     if (searchParams.get('query')) {
@@ -48,14 +51,13 @@ const Movies = () => {
   // );
 
   useEffect(() => {
-    const { search } = params;
     // Тут выполняем асинхронную операцию,
     // например HTTP-запрос за информацией о пользователе
-    if (search === '') return;
+    if (query === '') return;
 
     async function fetchMoviesList() {
       try {
-        const response = await fetchMovies(search);
+        const response = await fetchMovies(query);
         if (response) {
           setMovieList(response.results);
           console.log('setMovieList', response.results);
@@ -66,7 +68,8 @@ const Movies = () => {
     }
 
     fetchMoviesList();
-  }, [params]);
+  }, [query]);
+
   const schema = yup.object().shape({
     search: yup
       .string()
@@ -95,9 +98,9 @@ const Movies = () => {
   const onSubmitForm = (values, { resetForm }) => {
     console.log('values', values);
     //   console.log('actions', actions);
-    // const { search } = values;
-    setSearchParams(values);
-    // fetchByName();
+    const { search } = values;
+    setSearchParams({ query: search });
+    setQuery(search);
     resetForm();
   };
 
@@ -135,7 +138,13 @@ const Movies = () => {
         <ul>
           {movieList.map(({ id: movieId, original_title }) => (
             <li key={movieId}>
-              <NavLinkItem to={`${movieId}`}>{original_title}</NavLinkItem>
+              <NavLinkItem
+                to={`${movieId}`}
+                search={{ querySerch: `query=${query}` }}
+                state={{ from: location }}
+              >
+                {original_title}
+              </NavLinkItem>
             </li>
           ))}
         </ul>

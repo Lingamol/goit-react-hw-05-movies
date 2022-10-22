@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { NavWrapper } from './MovieDetails.styled';
 
 const MovieDetails = () => {
-  const { movieId } = useParams;
+  const { movieId } = useParams();
   console.log('movieId', movieId);
   const location = useLocation();
   const backLinkHref = location.state?.from ?? '/home';
