@@ -5,10 +5,10 @@ const MovieDetails = () => {
   const { movieId } = useParams();
   console.log('movieId', movieId);
   const location = useLocation();
-  const backLinkHref = location.state?.from ?? '/home';
-  console.log('location ', location);
-  console.log('location.state', location.state);
-  console.log('backLinkHref', backLinkHref);
+  const backLinkHref = location.state?.from ?? '/movies';
+  // console.log('location ', location);
+  // console.log('location.state', location.state);
+  // console.log('backLinkHref', backLinkHref);
   return (
     <>
       <div>MovieDetails</div>
