@@ -40,7 +40,7 @@ const MovieDetails = () => {
   return (
     <>
       <div>MovieDetails</div>
-      <Link to={backLinkHref}>Back </Link>
+      <Link to={backLinkHref}>Go back </Link>
       <div>
         <img src={poster} alt={title} width="240" height="320" />
       </div>
@@ -55,10 +55,14 @@ const MovieDetails = () => {
       <p>Additional information </p>
       <NavWrapper>
         <li>
-          <Link to="cast">Cast</Link>
+          <Link to="cast" state={{ from: backLinkHref }}>
+            Cast
+          </Link>
         </li>
         <li>
-          <Link to="reviews">Reviews</Link>
+          <Link to="reviews" state={{ from: backLinkHref }}>
+            Reviews
+          </Link>
         </li>
       </NavWrapper>
       <Outlet />

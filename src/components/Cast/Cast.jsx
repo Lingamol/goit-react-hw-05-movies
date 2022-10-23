@@ -6,8 +6,8 @@ const placeHolder =
   'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
 
 const Cast = () => {
+  const [movieCast, setMovieCast] = useState([]);
   const { movieId } = useParams();
-  const [movieCast, setmovieCast] = useState({});
   useEffect(() => {
     async function fetchMovieCast() {
       const URL = `https://api.themoviedb.org/3/movie/${movieId}/credits`;
@@ -18,14 +18,14 @@ const Cast = () => {
       try {
         const data = await fetchDataById(URL, API_PARAMS);
         if (data) {
-          setmovieCast(
+          setMovieCast(
             data.cast.map(({ profile_path, name, character }) => {
               return {
                 poster: profile_path
                   ? `https://image.tmdb.org/t/p/w500/${profile_path}`
                   : placeHolder,
-                name: name,
-                character: character,
+                name,
+                character,
               };
             })
           );
