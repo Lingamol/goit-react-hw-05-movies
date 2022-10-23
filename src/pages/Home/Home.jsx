@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { fetchDayMovies } from 'services/api';
-import { NavLinkItem } from './Home.styled';
+import { NavLinkItem, CardWrapper, Container, MovieName } from './Home.styled';
 
 const Home = () => {
   const [dayMovies, setDayMovies] = useState([]);
@@ -34,16 +34,20 @@ const Home = () => {
 
   return (
     <>
-      <p>Home</p>
-      <ul>
-        {dayMovies.map(({ id: movieId, original_title }) => (
-          <li key={movieId}>
+      {/* <p>Home</p> */}
+      <Container>
+        {dayMovies.map(({ id: movieId, original_title, poster_path }) => (
+          <CardWrapper key={movieId}>
             <NavLinkItem to={`movies/${movieId}`} state={{ from: location }}>
-              {original_title}
+              <img
+                src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                alt="{original_title}"
+              />
+              <MovieName>{original_title}</MovieName>
             </NavLinkItem>
-          </li>
+          </CardWrapper>
         ))}
-      </ul>
+      </Container>
     </>
   );
 };

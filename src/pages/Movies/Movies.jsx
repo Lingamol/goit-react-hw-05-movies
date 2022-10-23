@@ -11,6 +11,9 @@ import {
   FormBtn,
   SvgBtn,
   NavLinkItem,
+  CardWrapper,
+  Container,
+  MovieName,
 } from './Movies.styled';
 import * as yup from 'yup';
 import { fetchMovies } from 'services/api';
@@ -135,19 +138,19 @@ const Movies = () => {
         </Formik>
       </SearchBarWrapper>
       {movieList.length > 0 && (
-        <ul>
-          {movieList.map(({ id: movieId, original_title }) => (
-            <li key={movieId}>
-              <NavLinkItem
-                to={`${movieId}`}
-                search={{ querySerch: `query=${query}` }}
-                state={{ from: location }}
-              >
-                {original_title}
+        <Container>
+          {movieList.map(({ id: movieId, original_title, poster_path }) => (
+            <CardWrapper key={movieId}>
+              <NavLinkItem to={`movies/${movieId}`} state={{ from: location }}>
+                <img
+                  src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                  alt="{original_title}"
+                />
+                <MovieName>{original_title}</MovieName>
               </NavLinkItem>
-            </li>
+            </CardWrapper>
           ))}
-        </ul>
+        </Container>
       )}
     </div>
   );
