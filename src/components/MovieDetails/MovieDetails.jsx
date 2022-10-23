@@ -1,15 +1,25 @@
-import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
-import { NavWrapper } from './MovieDetails.styled';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
+import {
+  BtnBack,
+  BtnText,
+  NavWrapper,
+  SvgBtn,
+  Title,
+  SecondaryNavItem,
+  SecondaryNavLink,
+  NavTitle,
+} from './MovieDetails.styled';
 import { fetchMoviesById } from 'services/api';
 import { useState, useEffect, Suspense } from 'react';
 import Loader from 'components/Loader';
+import MovieDetailsCard from 'components/MovieDetailsCard';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
-  console.log('movieId', movieId);
+  // console.log('movieId', movieId);
   const location = useLocation();
   const backLinkHref = location.state?.from ?? '/movies';
-  const [selectedMovie, setSelectedMovie] = useState({});
+  const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
     async function fetchSelectedMovie() {
@@ -25,7 +35,7 @@ const MovieDetails = () => {
               .reduce((acc, genre) => (acc += genre.name + ' '), '')
               .trim(),
           });
-          console.log('setSelectedMovie', data);
+          // console.log('setSelectedMovie', data);
         }
       } catch (error) {
         console.log(error);
@@ -34,46 +44,31 @@ const MovieDetails = () => {
 
     fetchSelectedMovie();
   }, [movieId]);
-  // console.log('location ', location);
-  // console.log('location.state', location.state);
-  // console.log('backLinkHref', backLinkHref);
-  const { poster, title, score, overview, genres } = selectedMovie;
+
   return (
     <>
-      <div>MovieDetails</div>
-      <Link to={backLinkHref}>Go back </Link>
-      <div>
-        <img src={poster} alt={title} width="240" height="320" />
-      </div>
-      <div>
-        <h1>{title}</h1>
-        <p>User Score: {score}%</p>
-        <h2>Overview</h2>
-        <p>{overview}</p>
-        <h3>Genres</h3>
-        <p>{genres}</p>
-      </div>
-      <p>Additional information </p>
+      <Title>Movie details</Title>
+      <BtnBack to={backLinkHref}>
+        <SvgBtn />
+        <BtnText> Go back</BtnText>
+      </BtnBack>
+      {selectedMovie && <MovieDetailsCard selectedMovie={selectedMovie} />}
+      <NavTitle>Additional information </NavTitle>
       <NavWrapper>
-        <li>
-          <Link to="cast" state={{ from: backLinkHref }}>
+        <SecondaryNavItem>
+          <SecondaryNavLink to="cast" state={{ from: backLinkHref }}>
             Cast
-          </Link>
-        </li>
+          </SecondaryNavLink>
+        </SecondaryNavItem>
         <li>
-          <Link to="reviews" state={{ from: backLinkHref }}>
+          <SecondaryNavLink to="reviews" state={{ from: backLinkHref }}>
             Reviews
-          </Link>
+          </SecondaryNavLink>
         </li>
       </NavWrapper>
       <Suspense fallback={<Loader />}>
         <Outlet />
       </Suspense>
-      {/* <NavWrapper>
-        <Link to={'/cast'}>Cast</Link>
-        <Link to={'/reviews'}>Reviews</Link>
-      </NavWrapper>
-      <Outlet /> */}
     </>
   );
 };

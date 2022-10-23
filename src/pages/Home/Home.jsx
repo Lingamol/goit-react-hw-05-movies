@@ -11,7 +11,7 @@ const Home = () => {
   const [totalPages, seTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
-    console.log('mount home');
+    // console.log('mount home');
     // const fetchMovie = () => {
     //   fetchDayMovies()
     //     .then(data => {
@@ -27,10 +27,10 @@ const Home = () => {
         const response = await fetchDayMovies();
         if (response) {
           const { results, total_pages } = response;
-          console.log('results', results);
+          // console.log('results', results);
           setDayMovies(results);
           seTotalPages(total_pages);
-          console.log('setDayMovies:', results);
+          // console.log('setDayMovies:', results);
         }
       } catch (error) {
         console.log(error);
@@ -59,10 +59,10 @@ const Home = () => {
         const response = await fetchDayMovies(page);
         if (response) {
           const { results, total_pages } = response;
-          console.log('results', results);
+          // console.log('results', results);
           setDayMovies(results);
           seTotalPages(total_pages);
-          console.log('setDayMovies:', results);
+          // console.log('setDayMovies:', results);
         }
       } catch (error) {
         console.log(error);

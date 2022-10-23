@@ -8,9 +8,10 @@ export const NavLinkItem = styled(NavLink)`
 `;
 
 export const MovieContainer = styled.div`
+  /* justify-items: center; */
   text-align: center;
   /* display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-bottom: 10 px; */
+  justify-content: center; */
+  /* padding-bottom: 10 px; */
 `;

@@ -12,7 +12,7 @@ export const fetchDayMovies = async (page = 1) => {
     page,
   };
   const response = await axios.get(url, { params });
-  console.log('response.data.hits', response.data);
+  // console.log('response.data.hits', response.data);
   return response.data;
 };
 export const fetchMovies = async (search, page) => {
@@ -28,7 +28,7 @@ export const fetchMovies = async (search, page) => {
   return response.data;
 };
 export const fetchMoviesById = async id => {
-  console.log('id ', id);
+  // console.log('id ', id);
   const url = `https://api.themoviedb.org/3/movie/${id}`;
   const params = {
     api_key: 'ec8ea0b4348914be2279bac7c8ca37c4',

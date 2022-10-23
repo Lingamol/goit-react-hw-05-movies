@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchDataById } from 'services/api';
+import { ReviewsList } from './Reviews.styled';
 const Reviews = () => {
   const [movieReviews, setmovieReviews] = useState([]);
   const { movieId } = useParams();
-  console.log('movieId in reviews', movieId);
+  // console.log('movieId in reviews', movieId);
 
   useEffect(() => {
     async function fetchMovieReviews() {
@@ -23,7 +24,7 @@ const Reviews = () => {
               content: content,
             }))
           );
-          console.log('setmovieReviews', data);
+          // console.log('setmovieReviews', data);
         }
       } catch (error) {
         console.log(error);
@@ -36,7 +37,7 @@ const Reviews = () => {
   return (
     <>
       {movieReviews.length > 0 ? (
-        <ul>
+        <ReviewsList>
           {movieReviews.map(({ author, content }, index) => {
             return (
               <li key={index}>
@@ -45,7 +46,7 @@ const Reviews = () => {
               </li>
             );
           })}
-        </ul>
+        </ReviewsList>
       ) : (
         <p>We don't have any reviews for this movie. You can be first</p>
       )}

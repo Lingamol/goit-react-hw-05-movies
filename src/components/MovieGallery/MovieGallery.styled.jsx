@@ -5,12 +5,16 @@ export const NavLinkItem = styled(NavLink)`
   display: flex;
   flex-direction: column;
 `;
-
+export const ContainerWrapper = styled.div`
+  margin-left: auto;
+  margin-right: auto;
+`;
 export const Container = styled.ul`
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fit, 200px);
   gap: 16px;
+  padding: 0;
 `;
 
 export const CardWrapper = styled.li`

@@ -38,7 +38,7 @@ const Movies = () => {
           } else {
             setMovieList(prevState => [...prevState, ...results]);
             seTotalPages(total_pages);
-            console.log('setMovieList', results);
+            // console.log('setMovieList', results);
           }
         }
       } catch (error) {

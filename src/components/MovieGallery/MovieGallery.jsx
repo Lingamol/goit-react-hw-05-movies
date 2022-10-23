@@ -5,30 +5,33 @@ import {
   CardWrapper,
   Container,
   MovieName,
+  ContainerWrapper,
 } from './MovieGallery.styled';
 
 const MovieGallery = ({ movieList, pathLocation }) => {
   const location = useLocation();
   return (
-    <Container>
-      {movieList.map(({ id: movieId, original_title, poster_path: path }) => {
-        const poster_path = path ? path : 'uc4RAVW1T3T29h6OQdr7zu4Blui.jpg';
-        return (
-          <CardWrapper key={movieId}>
-            <NavLinkItem
-              to={`${pathLocation}${movieId}`}
-              state={{ from: location }}
-            >
-              <img
-                src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-                alt="{original_title}"
-              />
-              <MovieName>{original_title}</MovieName>
-            </NavLinkItem>
-          </CardWrapper>
-        );
-      })}
-    </Container>
+    <ContainerWrapper>
+      <Container>
+        {movieList.map(({ id: movieId, original_title, poster_path: path }) => {
+          const poster_path = path ? path : 'uc4RAVW1T3T29h6OQdr7zu4Blui.jpg';
+          return (
+            <CardWrapper key={movieId}>
+              <NavLinkItem
+                to={`${pathLocation}${movieId}`}
+                state={{ from: location }}
+              >
+                <img
+                  src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                  alt="{original_title}"
+                />
+                <MovieName>{original_title}</MovieName>
+              </NavLinkItem>
+            </CardWrapper>
+          );
+        })}
+      </Container>
+    </ContainerWrapper>
   );
 };
 export default MovieGallery;
