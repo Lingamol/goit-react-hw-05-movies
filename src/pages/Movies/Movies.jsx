@@ -1,28 +1,14 @@
-// import PropTypes from 'prop-types';
-import { useLocation, useSearchParams } from 'react-router-dom';
-import { Formik, ErrorMessage } from 'formik';
+import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useMemo } from 'react';
-
-import {
-  SearchForm,
-  FormInput,
-  FormErrorMessage,
-  SearchBarWrapper,
-  FormBtn,
-  SvgBtn,
-  NavLinkItem,
-  CardWrapper,
-  Container,
-  MovieName,
-} from './Movies.styled';
-import * as yup from 'yup';
+import { MovieContainer } from './Movies.styled';
 import { fetchMovies } from 'services/api';
+import Loader from 'components/Loader';
+import Button from 'components/Button';
+import MovieForm from 'components/MovieForm';
+import MovieGallery from 'components/MovieGallery';
 
 const Movies = () => {
-  const initialValues = {
-    search: '',
-  };
-
+  const PATH = '';
   const [searchParams, setSearchParams] = useSearchParams();
 
   const params = useMemo(
@@ -32,135 +18,62 @@ const Movies = () => {
   const { query: paramQuery } = params;
   const [query, setQuery] = useState(paramQuery ? paramQuery : '');
   const [movieList, setMovieList] = useState([]);
-  const location = useLocation();
-  // useEffect(
-  //   () => async () => {
-  //     if (searchParams.get('query')) {
-  //       console.log('first');
-  //       try {
-  //         console.log('fetch start');
-  //         const response = await fetchMovies(searchParams.get('query'));
-  //         if (response) {
-  //           setMovieList(response.results);
-  //           console.log('setMovieList', response.results);
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //   },
-  //   [searchParams]
-
-  // );
+  // const location = useLocation();
+  const [pageOnMovie, setPageOnMovie] = useState(1);
+  const [totalPagesOnMovie, seTotalPages] = useState(0);
+  const [isLoadingOnMovie, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Тут выполняем асинхронную операцию,
-    // например HTTP-запрос за информацией о пользователе
     if (query === '') return;
 
     async function fetchMoviesList() {
+      setIsLoading(true);
       try {
-        const response = await fetchMovies(query);
+        const response = await fetchMovies(query, pageOnMovie);
         if (response) {
-          setMovieList(response.results);
-          console.log('setMovieList', response.results);
+          const { results, total_pages } = response;
+          if (pageOnMovie === 1) {
+            setMovieList([...results]);
+            seTotalPages(total_pages);
+          } else {
+            setMovieList(prevState => [...prevState, ...results]);
+            seTotalPages(total_pages);
+            console.log('setMovieList', results);
+          }
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchMoviesList();
-  }, [query]);
+  }, [query, pageOnMovie]);
 
-  const schema = yup.object().shape({
-    search: yup
-      .string()
-      .max(20)
-      .matches(
-        /^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$/,
-        'Search may contain only letters, apostrophe, dash and spaces. '
-      )
-      .required(),
-  });
-  // const fetchByName = async () => {
-  //   const { query } = params;
-  //   if (query) {
-  //     try {
-  //       console.log('fetch start', query);
-  //       const response = await fetchMovies(query);
-  //       if (response) {
-  //         setMovieList(response.results);
-  //         console.log('setMovieList', response.results);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   }
-  // };
-  const onSubmitForm = (values, { resetForm }) => {
-    console.log('values', values);
-    //   console.log('actions', actions);
-    const { search } = values;
-    setSearchParams({ query: search });
-    setQuery(search);
-    resetForm();
-  };
+  function OnClickLoadMore() {
+    setPageOnMovie(prev => prev + 1);
+  }
+  function onDisableLoadMore() {
+    if (totalPagesOnMovie - pageOnMovie === 0) return true;
+    else return false;
+  }
 
   return (
-    <div>
-      <SearchBarWrapper className="searchbar">
-        <Formik
-          initialValues={initialValues}
-          validationSchema={schema}
-          onSubmit={onSubmitForm}
-          // onChange={onChangeForm}
-        >
-          <SearchForm className="form">
-            <FormBtn
-              type="submit"
-              // disabled={isSubmitting}
-              className="button"
-              aria-label="Search"
-            >
-              <SvgBtn />
-            </FormBtn>
-            <FormInput
-              className="input"
-              name="search"
-              type="text"
-              autoComplete="off"
-              autoFocus
-              placeholder="Search movies"
-            />
-            <ErrorMessage name="search" component={FormErrorMessage} />
-          </SearchForm>
-        </Formik>
-      </SearchBarWrapper>
+    <MovieContainer>
+      <MovieForm setQuery={setQuery} setSearchParams={setSearchParams} />
+      {isLoadingOnMovie && <Loader />}
       {movieList.length > 0 && (
-        <Container>
-          {movieList.map(({ id: movieId, original_title, poster_path }) => (
-            <CardWrapper key={movieId}>
-              <NavLinkItem to={`movies/${movieId}`} state={{ from: location }}>
-                <img
-                  src={`https://image.tmdb.org/t/p/w500/${poster_path}`}
-                  alt="{original_title}"
-                />
-                <MovieName>{original_title}</MovieName>
-              </NavLinkItem>
-            </CardWrapper>
-          ))}
-        </Container>
+        <MovieGallery movieList={movieList} pathLocation={PATH} />
       )}
-    </div>
+      {totalPagesOnMovie > 1 && (
+        <Button
+          onLoadMore={OnClickLoadMore}
+          onDisableLoadMore={onDisableLoadMore}
+        />
+      )}
+    </MovieContainer>
   );
 };
 
 export default Movies;
-
-Movies.propTypes = {
-  // onSubmit: PropTypes.func.isRequired,
-  // paginationMode: PropTypes.string.isRequired,
-  // isSubmitting: PropTypes.bool.isRequired,
-  // radioBtnChange: PropTypes.func.isRequired,
-};

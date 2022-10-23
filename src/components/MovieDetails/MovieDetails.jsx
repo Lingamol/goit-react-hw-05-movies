@@ -1,7 +1,8 @@
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
 import { NavWrapper } from './MovieDetails.styled';
 import { fetchMoviesById } from 'services/api';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import Loader from 'components/Loader';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -65,7 +66,9 @@ const MovieDetails = () => {
           </Link>
         </li>
       </NavWrapper>
-      <Outlet />
+      <Suspense fallback={<Loader />}>
+        <Outlet />
+      </Suspense>
       {/* <NavWrapper>
         <Link to={'/cast'}>Cast</Link>
         <Link to={'/reviews'}>Reviews</Link>
