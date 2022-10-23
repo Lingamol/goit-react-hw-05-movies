@@ -36,3 +36,14 @@ export const fetchMoviesById = async id => {
   // console.log('response.data.hits', response.data);
   return response.data;
 };
+
+export const fetchDataById = async (url, params) => {
+  // console.log('id ', id);
+  // const url = `https://api.themoviedb.org/3/movie/${id}`;
+  // const params = {
+  //   api_key: 'ec8ea0b4348914be2279bac7c8ca37c4',
+  // };
+  const response = await axios.get(url, { params });
+  // console.log('response.data.hits', response.data);
+  return response.data;
+};
