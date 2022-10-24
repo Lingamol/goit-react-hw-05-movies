@@ -1,5 +1,5 @@
-import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
 import { fetchDataById } from 'services/api';
 import {
   Container,
@@ -8,6 +8,7 @@ import {
   ActorCharacter,
   CardImg,
 } from './Cast.styled';
+import Filter from 'components/Filter';
 // import { Link } from 'react-router-dom';
 const placeHolder =
   'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png';
@@ -15,6 +16,8 @@ const placeHolder =
 const Cast = () => {
   const [movieCast, setMovieCast] = useState([]);
   const { movieId } = useParams();
+  const [searchParams, setsearchParams] = useSearchParams();
+  const filterParam = searchParams.get('filter') ?? '';
   useEffect(() => {
     async function fetchMovieCast() {
       const URL = `https://api.themoviedb.org/3/movie/${movieId}/credits`;
@@ -45,19 +48,32 @@ const Cast = () => {
 
     fetchMovieCast();
   }, [movieId]);
+  const onChange = value => {
+    setsearchParams(value !== '' ? { filter: value } : {});
+  };
+
+  const visibleActors = useMemo(() => {
+    const normalizedFilter = filterParam.toLocaleLowerCase();
+    return movieCast.filter(actor =>
+      actor.name.toLowerCase().includes(normalizedFilter)
+    );
+  }, [filterParam, movieCast]);
 
   return movieCast.length > 0 ? (
-    <Container>
-      {movieCast.map(({ poster, name, character }) => {
-        return (
-          <CardWrapper key={name}>
-            <CardImg src={poster} alt={name} />
-            <ActorName>{name}</ActorName>
-            <ActorCharacter>Character: {character}</ActorCharacter>
-          </CardWrapper>
-        );
-      })}
-    </Container>
+    <>
+      <Filter onChange={onChange} filter={filterParam} />
+      <Container>
+        {visibleActors.map(({ poster, name, character }) => {
+          return (
+            <CardWrapper key={name}>
+              <CardImg src={poster} alt={name} />
+              <ActorName>{name}</ActorName>
+              <ActorCharacter>Character: {character}</ActorCharacter>
+            </CardWrapper>
+          );
+        })}
+      </Container>
+    </>
   ) : (
     <p>We don't have any information about actors...</p>
   );
