@@ -10,6 +10,7 @@ import {
 
 const MovieGallery = ({ movieList, pathLocation }) => {
   const location = useLocation();
+  // console.log('location', location);
   return (
     <ContainerWrapper>
       <Container>

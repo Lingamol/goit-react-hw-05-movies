@@ -20,7 +20,8 @@ const MovieDetails = () => {
   const location = useLocation();
   const backLinkHref = location.state?.from ?? '/home';
   const [selectedMovie, setSelectedMovie] = useState(null);
-
+  console.log('location', location);
+  console.log('backLinkHref', backLinkHref);
   useEffect(() => {
     async function fetchSelectedMovie() {
       try {
