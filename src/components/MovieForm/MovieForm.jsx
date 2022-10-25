@@ -1,5 +1,6 @@
 import { Formik, ErrorMessage } from 'formik';
 import * as yup from 'yup';
+// import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   SearchForm,
@@ -10,18 +11,25 @@ import {
   SvgBtn,
 } from './MovieForm.styled';
 
-const MovieForm = ({ setSearchParams, setQuery }) => {
+const MovieForm = ({ setSearchParams, setQuery, query }) => {
   const initialValues = {
-    search: '',
+    search: query !== {} ? query : '',
   };
+  // const [initialValues, setInitialValues] = useState();
   const onSubmitForm = (values, { resetForm }) => {
     console.log('values', values);
     //   console.log('actions', actions);
     const { search } = values;
     setSearchParams({ query: search });
     setQuery(search);
-    resetForm();
+    // resetForm();
   };
+  // useEffect(() => {
+  //   setInitialValues({
+  //     search: query ? query : '',
+  //   });
+  // }, [query]);
+
   const schema = yup.object().shape({
     search: yup
       .string()

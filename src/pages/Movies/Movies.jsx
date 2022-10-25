@@ -61,7 +61,11 @@ const Movies = () => {
 
   return (
     <MovieContainer>
-      <MovieForm setQuery={setQuery} setSearchParams={setSearchParams} />
+      <MovieForm
+        setQuery={setQuery}
+        setSearchParams={setSearchParams}
+        query={query}
+      />
       {isLoadingOnMovie && <Loader />}
       {movieList.length > 0 && (
         <MovieGallery movieList={movieList} pathLocation={PATH} />

@@ -18,6 +18,9 @@ const Cast = () => {
   const { movieId } = useParams();
   const [searchParams, setsearchParams] = useSearchParams();
   const filterParam = searchParams.get('filter') ?? '';
+  console.log('searchParams.get(filter)', searchParams.get('filter'));
+  console.log('searchParams.get(query)', searchParams.get('query'));
+  console.log('searchParams from cast', searchParams);
   useEffect(() => {
     async function fetchMovieCast() {
       const URL = `https://api.themoviedb.org/3/movie/${movieId}/credits`;
